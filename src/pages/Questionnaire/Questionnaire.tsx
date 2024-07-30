@@ -51,11 +51,12 @@ const Questionnaire = () => {
 
     const questionnaireCollectionFromDb = collection(db, "questionnaire");
 
-    const handleTablValueChange = (newValue: string | boolean) => {
+    const handleTabValueChange = (newValue: string | boolean) => {
         if (typeof newValue === 'string') {
             setTabValue(newValue);
-        } else {
-            console.error("Expected a string value for tabValue");
+        } 
+        else {
+            console.error("Expected a string value");
         }
     };
 
@@ -63,14 +64,14 @@ const Questionnaire = () => {
         if (typeof newValue === 'boolean') {
             setMultiUse(newValue);
         } else {
-            console.error("Expected a boolean value for multiUse");
+            console.error("Expected a boolean value");
         }
     };
     const handleExternalMonitorChange = (newValue: boolean | string) => {
         if (typeof newValue === 'boolean') {
             setIsExternalMonitor(newValue);
         } else {
-            console.error("Expected a boolean value for multiUse");
+            console.error("Expected a boolean value");
         }
     };
 
@@ -159,7 +160,7 @@ const Questionnaire = () => {
                 <div className="box-question">
                     <h3>Pidätkö selaimessasi päällä useita välilehtiä kerralla? </h3>
                     <p>Arvioi keskimääräistä välilehtien määrää selaimessasi.</p>
-                    <RadioButtonGroup value={tabValue} options={tabAmountOptions} name={'tabOptions'} onChange={handleTablValueChange} />
+                    <RadioButtonGroup value={tabValue} options={tabAmountOptions} name={'tabOptions'} onChange={handleTabValueChange} />
                 </div>
                 <div className="box-question">
                     <h3>Käytätkö konetta yleensä yhden asian tekemiseen kerralla? </h3>
@@ -172,8 +173,6 @@ const Questionnaire = () => {
                     <h3>Tykkäätkö käyttää ulkoista monitoria?</h3>
                     <p>Jos ulkoinen monitori on saatavilla, niin kytketkö sen kiinni?</p>
                     <RadioButtonGroup value={isExternalMonitor} options={externalMonitorOptions} name={'externalMonitorOptions'} onChange={handleExternalMonitorChange} />
-
-
                 </div>
                 <div className="box-question">
                     <h3>Missä työskentelet useimmiten?</h3>

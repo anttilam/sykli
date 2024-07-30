@@ -14,7 +14,14 @@ type RadioGroupProps = {
     value: string | boolean;
 }
 
-const RadioButtonGroup = ({value, onChange, name, options} : RadioGroupProps)   => {
+const RadioButtonGroup = ({value, onChange, name, options} : RadioGroupProps) => {
+
+
+    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value === 'true' ? true : e.target.value === 'false' ? false : e.target.value;
+        onChange(newValue);
+    };
+    
     return (
         <Fragment>
             {options.map(option => (
@@ -25,8 +32,7 @@ const RadioButtonGroup = ({value, onChange, name, options} : RadioGroupProps)   
                         name={name}
                         value={String(option.value)}
                         checked={value === option.value}
-                        onChange={(e) => {const newValue = e.target.value === 'true' ? true : e.target.value === 'false' ? false : e.target.value;
-                            onChange(newValue);}}
+                        onChange={handleOnChange}
                     />
                 </label>
                 <br />
