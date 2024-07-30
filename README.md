@@ -8,3 +8,8 @@ Even though this is a relatively small app, it is built as a proper long term pr
 - embedded powerBI charts based on results
 - AI prompt
 
+# IMPROVEMENTS
+- one question at a time, side scroller(?)
+- form validator
+ 
+
