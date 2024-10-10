@@ -26,7 +26,7 @@ const RadioButtonGroup = ({value, onChange, name, options} : RadioGroupProps) =>
         <Fragment>
             {options.map(option => (
                 <Fragment key={option.label}>
-                <label className="answer-label" key={option.label}>
+                <label className={value === option.value ? 'answer-label selected' : 'answer-label'} key={option.label}>
                     {option.label}
                     <input type="radio" 
                         name={name}

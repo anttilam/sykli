@@ -19,7 +19,7 @@ function App() {
 
   return (
     <>
-      <h1>Sykli Esikartoitus</h1>
+      <h1>Sykli Kartoitus</h1>
       <div>
             {!user ?
                 (
