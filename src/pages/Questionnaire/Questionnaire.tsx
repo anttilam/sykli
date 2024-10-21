@@ -2,8 +2,8 @@ import { useState } from "react";
 
 //import { getDocs, collection, addDoc } from 'firebase/firestore';
 import { addDoc, collection } from "firebase/firestore";
-import { signOut } from "firebase/auth";
-import { auth, db } from "../../config/firebase-config";
+// import { signOut } from "firebase/auth";
+import { db } from "../../config/firebase-config";
 
 import RadioButtonGroup from "../../components/RadiobuttonGroup";
 import {
@@ -15,30 +15,29 @@ import {
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Switch from "@mui/material/Switch";
-import ThreeDRotation from "@mui/icons-material/ThreeDRotation";
 import SubdirectoryArrowRightIcon from "@mui/icons-material/SubdirectoryArrowRight";
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 
-type RadioOption = {
-    label: string;
-    value: string;
-};
+// type RadioOption = {
+//     label: string;
+//     value: string;
+// };
 
 type RadioOptionMultiUse = {
     label: string;
     value: boolean;
 };
 
-const tabAmountOptions: RadioOption[] = [
-    { value: "Muutama (1-10)", label: "Muutama (1-10)" },
-    { value: "Useampi (11-20)", label: "Useampi (11-20)" },
-    { value: "Monta (21-50)", label: "Monta (21-50)" },
-];
+// const tabAmountOptions: RadioOption[] = [
+//     { value: "Muutama (1-10)", label: "Muutama (1-10)" },
+//     { value: "Useampi (11-20)", label: "Useampi (11-20)" },
+//     { value: "Monta (21-50)", label: "Monta (21-50)" },
+// ];
 
-const multiUseOptions: RadioOptionMultiUse[] = [
-    { value: false, label: "Yleensä vain yksi ohjelma kerrallaan auki" },
-    { value: true, label: "Pidän useaa ohjelmaa samaan aikaa auki" },
-];
+// const multiUseOptions: RadioOptionMultiUse[] = [
+// { value: false, label: "Yleensä vain yksi ohjelma kerrallaan auki" },
+// { value: true, label: "Pidän useaa ohjelmaa samaan aikaa auki" },
+// ];
 
 const externalMonitorOptions: RadioOptionMultiUse[] = [
     { value: false, label: "Pelkkä läppärin näyttö" },
@@ -55,19 +54,19 @@ const Questionnaire = () => {
     const [isSubmitPressed, setIsSubmitPressed] = useState<boolean>(false);
     const [isSoftwareUse, setIsSoftwareUse] = useState(false);
 
-    const [softwareUseMins, setSoftwareUseMins] = useState<number>();
+    const [softwareUseHours, setSoftwareUseHours] = useState<number>();
     const [userName, setUserName] = useState("");
-    const [computerMinutes, setComputerMinutes] = useState<number>();
+    const [computerHours, setComputerHours] = useState<number>();
     const [selectedWorkEnviro, setSelectedWorkEnviro] = useState("Kotona");
     const [selectedWorkOtherEnviro, setSelectedWorkOtherEnviro] = useState<string>();
     const [teamsUse, setTeamsUse] = useState({
         didUseTeams: false,
         teamsSelfCameraOn: false,
-        cameraMinutes: null,
-        teamsMinutes: null,
+        cameraHours: null,
+        teamsHours: null,
     });
     // No need for this yet const [userAnswers, setUserAnswers] = useState([]) as any;
-    const questionnaireCollectionFromDb = collection(db, "questionnaire");
+    // const questionnaireCollectionFromDb = collection(db, "questionnaire");
 
     //*Varsinaista kyselyä varten
     const surveyCollectionFromDb = collection(db, "survey");
@@ -119,11 +118,11 @@ const Questionnaire = () => {
         try {
             await addDoc(surveyCollectionFromDb, {
                 userName,
-                softwareUseMins: softwareUseMins ?? 0,
-                computerUseMins: computerMinutes ?? 0,
+                softwareUseHours: softwareUseHours ?? 0,
+                computerUseHours: computerHours ?? 0,
                 selectedWorkEnviro: selectedWorkEnviro === 'somethingElse' ? selectedWorkOtherEnviro : selectedWorkEnviro,
-                teamsUseMins: teamsUse.cameraMinutes ?? 0,
-                selfCameraMins: teamsUse.cameraMinutes ?? 0
+                teamsUseHours: teamsUse.cameraHours ?? 0,
+                selfCameraHours: teamsUse.cameraHours ?? 0
             });
             //* Get all user answers. No need yet. getUserAnswers();
         } catch (err) {
@@ -132,14 +131,14 @@ const Questionnaire = () => {
         setIsSubmitPressed(true);
     };
 
-    const logout = async () => {
-        try {
-            await signOut(auth);
-            console.log("Log out success");
-        } catch (err) {
-            console.error(err);
-        }
-    };
+    // const logout = async () => {
+    //     try {
+    //         await signOut(auth);
+    //         console.log("Log out success");
+    //     } catch (err) {
+    //         console.error(err);
+    //     }
+    // };
 
     const handleTeamsUseChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -200,13 +199,16 @@ const Questionnaire = () => {
                     <h3>Käyttö yhteensä</h3>
                     <p>Arvioi montako minuuttia käytit konetta päivän aikana yhteensä. Puolen tunnin tarkkuus riittää.</p>
                     <TextField
+                        inputProps={{
+                            step: "0.5"
+                        }}
                         type="number"
                         color="primary"
                         id="outlined-basic"
-                        label="Koneella /min .."
+                        label="Koneella /tuntia .."
                         variant="outlined"
                         onChange={(e) =>
-                            setComputerMinutes(Number(e.target.value))}
+                            setComputerHours(Number(e.target.value))}
                     />
                 </div>
 
@@ -243,12 +245,15 @@ const Questionnaire = () => {
                                 </div>
                                 <div className="indent double">
                                     <TextField
+                                        inputProps={{
+                                            step: "0.5"
+                                        }}
                                         type="number"
                                         color="primary"
                                         id="outlined-basic"
-                                        label="Teams käyttö /min .."
+                                        label="Teams käyttö /tuntia .."
                                         variant="outlined"
-                                        value={teamsUse.teamsMinutes}
+                                        value={teamsUse.teamsHours}
                                         onChange={(e) =>
                                             handleTeamsUseChange(e)}
                                     />
@@ -283,13 +288,18 @@ const Questionnaire = () => {
                                     <div className="indent triple">
                                         {teamsUse.teamsSelfCameraOn && (
                                             <TextField
+
                                                 type="number"
+                                                //inputComponent="input" // Use native input component
+                                                inputProps={{
+                                                    step: "0.5"
+                                                }}
                                                 color="primary"
                                                 id="outlined-basic"
-                                                name="cameraMinutes"
-                                                label="Kamerani päällä /min.."
+                                                name="cameraHours"
+                                                label="Kamerani päällä /tuntia.."
                                                 variant="outlined"
-                                                value={teamsUse.cameraMinutes}
+                                                value={teamsUse.cameraHours}
                                                 onChange={(e) =>
                                                     handleTeamsUseChange(e)}
                                             />
@@ -318,12 +328,15 @@ const Questionnaire = () => {
                             </div>
                             <div className="indent double">
                                 <TextField
-                                    value={softwareUseMins}
+                                    value={softwareUseHours}
+                                    inputProps={{
+                                        step: "0.5"
+                                    }}
                                     type="number"
-                                    label="Käytin /min .."
+                                    label="Käytin /tuntia .."
                                     variant="outlined"
                                     onChange={(e) =>
-                                        setSoftwareUseMins(
+                                        setSoftwareUseHours(
                                             Number(e.target.value),
                                         )}
                                 />
@@ -352,8 +365,11 @@ const Questionnaire = () => {
                             </div>
                             <div className="indent double">
                                 <TextField
+                                    inputProps={{
+                                        step: "0.5"
+                                    }}
                                     type="number"
-                                    label="Monitori oli käytössä /min .."
+                                    label="Monitori oli käytössä /tuntia .."
                                     variant="outlined"
                                     onChange={(e) =>
                                         setSelectedWorkOtherEnviro(
@@ -475,7 +491,7 @@ const Questionnaire = () => {
             {isSubmitPressed && (
                 <div style={{ marginTop: "50px" }}>
                     <h4>
-                        Kiitos vastauksista! Olet nyt tukenut näyttötyötäni joten lähetän sinulle hyviä vibraatiota <AutoAwesomeIcon fontSize="large" style={{color: 'burlywood', verticalAlign : 'middle'}} />
+                        Kiitos vastauksista! Olet nyt tukenut näyttötyötäni, joten käytännössä olet maan päällä kävelevä pyhimys <AutoAwesomeIcon fontSize="large" style={{ color: 'burlywood', verticalAlign: 'middle' }} />
                     </h4>
                     {/* <button onClick={logout}>Kirjaudu ulos</button> */}
                 </div>
